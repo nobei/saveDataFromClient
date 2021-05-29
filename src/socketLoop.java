@@ -2,6 +2,7 @@ import javax.imageio.IIOException;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.List;
 import java.util.Properties;
 
 public class socketLoop implements Runnable {
@@ -9,11 +10,15 @@ public class socketLoop implements Runnable {
     private int sockNum;
     private ServerSocket socket;
     private String kind;
+    private static volatile long shareTime = 0;
+    private static volatile Signal flag = null;
 
-    public socketLoop(int num) throws IOException {
+    public socketLoop(int num, long shareTime, Signal flag) throws IOException {
         this.sockNum = num;
         socket = new ServerSocket(num);
         kind = readKind();
+        this.shareTime = shareTime;
+        this.flag =flag;
     }
 
 
@@ -30,6 +35,20 @@ public class socketLoop implements Runnable {
                     InputStreamReader input = new InputStreamReader(socketData.getInputStream());
                     BufferedReader reader = new BufferedReader(input);
                     long time = System.currentTimeMillis();
+
+
+                    if (flag == Signal.Start)
+                        flag = Signal.Wait;
+                    else if(flag == Signal.Wait) {
+                        time = shareTime;
+                        flag = Signal.End;
+                    }
+                    else if(flag == Signal.End)
+                    {
+                        flag = Signal.Start;
+                    }
+
+
                     String path = "";
                     if(sockNum == 6000)
                         path = "src//audio/"+kind1+"/"+time + kind1 + ".txt";
