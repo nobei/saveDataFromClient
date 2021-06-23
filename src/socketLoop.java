@@ -37,23 +37,23 @@ public class socketLoop implements Runnable {
                     long time = System.currentTimeMillis();
 
 
-                    if (flag == Signal.Start)
+                    if (flag == Signal.Start) {
+                        shareTime = time;
                         flag = Signal.Wait;
+
+                    }
                     else if(flag == Signal.Wait) {
                         time = shareTime;
-                        flag = Signal.End;
-                    }
-                    else if(flag == Signal.End)
-                    {
                         flag = Signal.Start;
                     }
 
 
+
                     String path = "";
                     if(sockNum == 6000)
-                        path = "src//audio/"+kind1+"/"+time + kind1 + ".txt";
+                        path = "src/audio/"+kind1+"/"+time + kind1 + ".txt";
                     else
-                        path = "src/gyro/"+time + kind1 + ".txt";
+                        path = "src/audio/"+kind1+"/"+time + "gyro" + ".txt";
 
                     FileWriter file = new FileWriter(path);
                     String length = reader.readLine();
