@@ -13,7 +13,7 @@ public class socketLoop implements Runnable {
     private static volatile long shareTime = 0;
     private static volatile Signal flag = null;
 
-    public socketLoop(int num, long shareTime, Signal flag) throws IOException {
+    public  socketLoop(int num, long shareTime, Signal flag) throws IOException {
         this.sockNum = num;
         socket = new ServerSocket(num);
         kind = readKind();
@@ -51,9 +51,9 @@ public class socketLoop implements Runnable {
 
                     String path = "";
                     if(sockNum == 6000)
-                        path = "src/audio/"+kind1+"/"+time + kind1 + ".txt";
+                        path = "src/audio/newAudio/haojiangshan/"+kind1+"/"+time + kind1 + ".txt";
                     else
-                        path = "src/audio/"+kind1+"/"+time + "gyro" + ".txt";
+                        path = "src/audio/newAudio/haojiangshan/"+kind1+"/"+time + "gyro" + ".txt";
 
                     FileWriter file = new FileWriter(path);
                     String length = reader.readLine();
@@ -61,6 +61,8 @@ public class socketLoop implements Runnable {
                         file.write(length + "\n");
                         length = reader.readLine();
                     }
+
+                    System.out.println(path+"hasSaved");
 
                     file.close();
                 }
